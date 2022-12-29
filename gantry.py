@@ -127,15 +127,31 @@ class Gantry(DynamicSystem):
         sphi=np.sin(phi)
 
         ######-------!!!!!!Aufgabe!!!!!!-------------########
+
+        # Lösen des Gleichungssystems mit Hilfe der Massenmatrix
+        # Wird für die Zustandsvariablen dx3,dx4,dx5 benötigt
+        masssen_matrix = np.array([[self.m+self.M, 0 ,-self.m*(x1*sphi+x2*cphi)],
+                                   [0, self.m+self.M, self.m*(x1*cphi-x2*sphi)],
+                                   [-self.m*(x1*sphi+x2*cphi),self.m*(x1*cphi-x2*sphi),self.J+self.m*(x1**2+x2**2)]])
+        masssen_matrix_inv = np.linalg.inv(masssen_matrix)
+        impulse_vektor = np.array([[p1],[p2],[pphi]])
+        koordinaten_vektor = np.array([[dx1],[dx2]])
+        koordinaten_matrix = np.array([[self.m*cphi, -self.m*sphi],
+                                       [self.m*sphi, self.m*cphi],
+                                       [-self.m*x2, self.m*x1]])
+        dz1,dz2,dphi = np.dot(masssen_matrix_inv,np.dot(-koordinaten_matrix,koordinaten_vektor)+impulse_vektor)
+        
         #Hier sollten die korrekten Ableitungen berechnet und zurückgegebenn werden
-        dx1=0
-        dx2=0
-        dz1=0
-        dz2=0
-        dphi=0
-        dp1=0
-        dp2=0
-        dpphi=0
+        dx1=dx1
+        dx2=dx2
+        dz1=dz1
+        dz2=dz2
+        dphi=dphi
+        dp1=-4*self.k*z1
+        dp2=-4*self.k*z2
+        dpphi=(-4*self.k*self.L**2*sphi + 
+               self.m*(-dphi*dz1*x1-dphi*dz2*x2-dz1*dx2+dx1*dz2)*cphi +
+               self.m*(dphi*dz1*x2-dphi*dz2*x1-dz1*dx1+dz2*dx1)*sphi)
 
         dx=np.array([dx1,dx2,dz1,dz2,dphi,ddx1,ddx2,dp1,dp2,dpphi])
 
@@ -222,7 +238,10 @@ class Gantry(DynamicSystem):
         ######-------!!!!!!Aufgabe!!!!!!-------------########
         #Hier sollten die korrekte Ausgangsgleichung implementiert werden
         if _x.ndim==1:
-            return np.zeros((2,))
+            y1 = _x[2]+np.cos(_x[4])*_x[0]-np.sin(_x[4])*_x[1]
+            y2 = _x[3]+np.sin(_x[4])*_x[0]+np.cos(_x[4])*_x[1]
+            y = np.array([y1,y2])
+            return y
         else:
             return np.zeros_like(_x)
         ######-------!!!!!!Aufgabe Ende!!!!!!-------########
@@ -232,7 +251,10 @@ class Gantry(DynamicSystem):
         ######-------!!!!!!Aufgabe!!!!!!-------------########
         #Hier sollten die korrekte Ausgangsgleichung implementiert werden
         if _x.ndim==1:
-            return np.zeros((2,))
+            y1 = _x[0]
+            y2 = _x[1]
+            y = np.array([y1,y2])
+            return y  
         else:
             return np.zeros_like(_x)
         ######-------!!!!!!Aufgabe Ende!!!!!!-------########
