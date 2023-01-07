@@ -243,7 +243,11 @@ class Gantry(DynamicSystem):
             y[1] = _x[3]+np.sin(_x[4])*_x[0]+np.cos(_x[4])*_x[1]
             return y
         else:
-            return np.zeros_like(_x)
+            y = np.zeros((2,_x.shape[1]))
+            for ii in range(x.shape[1]):
+                y[0,ii] = _x[2,ii]+np.cos(_x[4,ii])*_x[0,ii]-np.sin(_x[4,ii])*_x[1,ii]
+                y[0,ii] = _x[3,ii]+np.sin(_x[4,ii])*_x[0,ii]+np.cos(_x[4,ii])*_x[1,ii]
+            return y 
         ######-------!!!!!!Aufgabe Ende!!!!!!-------########
 
     def position_axis(self,t,x):
@@ -256,7 +260,11 @@ class Gantry(DynamicSystem):
             y[1] = _x[1]
             return y  
         else:
-            return np.zeros_like(_x)
+            y = np.zeros((2,_x.shape[1]))
+            for ii in range(x.shape[1]):
+                y[0,ii] = _x[0,ii] 
+                y[1,ii] = _x[1,ii]
+            return y
         ######-------!!!!!!Aufgabe Ende!!!!!!-------########
             
     def number_of_states(self):
