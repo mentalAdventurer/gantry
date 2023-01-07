@@ -238,9 +238,9 @@ class Gantry(DynamicSystem):
         ######-------!!!!!!Aufgabe!!!!!!-------------########
         #Hier sollten die korrekte Ausgangsgleichung implementiert werden
         if _x.ndim==1:
-            y1 = _x[2]+np.cos(_x[4])*_x[0]-np.sin(_x[4])*_x[1]
-            y2 = _x[3]+np.sin(_x[4])*_x[0]+np.cos(_x[4])*_x[1]
-            y = np.array([y1,y2])
+            y = np.zeros(2)
+            y[0] = _x[2]+np.cos(_x[4])*_x[0]-np.sin(_x[4])*_x[1]
+            y[1] = _x[3]+np.sin(_x[4])*_x[0]+np.cos(_x[4])*_x[1]
             return y
         else:
             return np.zeros_like(_x)
@@ -251,9 +251,9 @@ class Gantry(DynamicSystem):
         ######-------!!!!!!Aufgabe!!!!!!-------------########
         #Hier sollten die korrekte Ausgangsgleichung implementiert werden
         if _x.ndim==1:
-            y1 = _x[0]
-            y2 = _x[1]
-            y = np.array([y1,y2])
+            y = np.zeros(2)
+            y[0] = _x[0]
+            y[1] = _x[1]
             return y  
         else:
             return np.zeros_like(_x)
