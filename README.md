@@ -1,0 +1,20 @@
+# Projektfortschritt
+
+- Aufgabe 1
+  - [ ] a) Vervollständigen
+  - [ ] b) Linearisierung
+- Aufgabe 2 
+  - [ ] a)
+  - [ ] b) 
+  - [ ] c)
+  - [ ] d)
+  - [ ] e)
+- Aufgabe 3
+  - [ ] a)
+  - [ ] b)
+  - [ ] c)
+  - [ ] d)
+  - [ ] e)
+  - [ ] f)
+  - [ ] g)
+  - [ ] h)
