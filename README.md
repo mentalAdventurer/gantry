@@ -1,5 +1,7 @@
 # Projektfortschritt
 
+[Aufgabenstellung](./.assets/hausuebung.pdf)
+
 - Aufgabe 1
   - [ ] a) Vervollständigen
   - [ ] b) Linearisierung
