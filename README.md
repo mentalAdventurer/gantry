@@ -3,7 +3,7 @@
 [Aufgabenstellung](./.assets/hausuebung.pdf)
 
 - Aufgabe 1
-  - [ ] a) Vervollständigen
+  - [x] a) Vervollständigen
   - [ ] b) Linearisierung
 - Aufgabe 2 
   - [ ] a)
