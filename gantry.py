@@ -136,10 +136,10 @@ class Gantry(DynamicSystem):
         masssen_matrix_inv = np.linalg.inv(masssen_matrix)
         impulse_vektor = np.array([[p1],[p2],[pphi]])
         koordinaten_vektor = np.array([[dx1],[dx2]])
-        koordinaten_matrix = np.array([[self.m*cphi, -self.m*sphi],
+        koeffizienten_matrix = np.array([[self.m*cphi, -self.m*sphi],
                                        [self.m*sphi, self.m*cphi],
                                        [-self.m*x2, self.m*x1]])
-        dz1,dz2,dphi = np.dot(masssen_matrix_inv,np.dot(-koordinaten_matrix,koordinaten_vektor)+impulse_vektor)
+        dz1,dz2,dphi = np.dot(masssen_matrix_inv,np.dot(-koeffizienten_matrix,koordinaten_vektor)+impulse_vektor)
         
         #Hier sollten die korrekten Ableitungen berechnet und zurückgegebenn werden
         dx1=dx1
