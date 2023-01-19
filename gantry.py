@@ -70,15 +70,20 @@ class Gantry(DynamicSystem):
         
         ######-------!!!!!!Aufgabe!!!!!!-------------########
         #Hier die sollten die korrekten Matrizen angegeben werden
-        M= np.array([[self.m+self.M, 0, -self.m*x2],
+        mass_matrix_lin= np.array([[self.m+self.M, 0, -self.m*x2],
                     [0, self.m+self.M, self.m*x1],
                     [-self.m*x2, self.m*x1, self.J+self.m*(x1**2+x2**2)]])
-        invM = np.linalg.inv(M)
-        x25 = np.dot(invM , np.array([[self.m, 0],[0, self.m],[-self.m*x2, self.m*x1]]))
+       
+        inv_mass_matrix_lin = np.linalg.inv(mass_matrix_lin)
 
+        state_vector = np.dot(inv_mass_matrix_lin, np.array([[self.m, 0],[0, self.m],[-self.m*x2, self.m*x1]]))
+        
+        #state_vector[i, j,] , auch für p1 etc.
         A=np.array([[0 , 0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0],
                     [0 , 0 , 0 , 0 , 0 , 0 , 1 , 0 , 0 , 0],
-                    [np.dot(np.linalg.inv(M) , np.array([[self.m, 0],[0, self.m],[-self.m*x2, self.m*x1]]))],
+                    [0, 0, 0, 0, 0, state_vector[0,0], state_vector[0,1], inv_mass_matrix_lin[0,0], inv_mass_matrix_lin[0,1], inv_mass_matrix_lin[0,2]],
+                    [0, 0, 0, 0, 0, state_vector[1,0], state_vector[1,1], inv_mass_matrix_lin[1,0], inv_mass_matrix_lin[1,1], inv_mass_matrix_lin[1,2]],
+                    [0, 0, 0, 0, 0, state_vector[2,0], state_vector[2,1], inv_mass_matrix_lin[2,0], inv_mass_matrix_lin[2,1], inv_mass_matrix_lin[2,2]],
                     [np.zeros((2,10))],
                     [0, 0, -4*self.k, 0, 0, 0, 0, 0, 0, 0],
                     [0, 0, 0, -4*self.k, 0, 0, 0, 0, 0, 0],
