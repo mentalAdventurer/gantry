@@ -66,7 +66,7 @@ class Gantry(DynamicSystem):
            'accell_frame':{'accell_axis':np.zeros((2,2))},
            'gyro_frame':{'accell_axis':np.zeros((1,2))},
            'state':{'accell_axis':np.zeros((self.number_of_states(),2))}}
-        B={'accell_axis':np.zeros((self.number_of_states(),2))};
+        B={'accell_axis':np.zeros((self.number_of_states(),2))}
         
         ######-------!!!!!!Aufgabe!!!!!!-------------########
         #Hier die sollten die korrekten Matrizen angegeben werden
@@ -81,26 +81,26 @@ class Gantry(DynamicSystem):
         #state_vector[i, j,] , auch für p1 etc.
         A=np.array([[0 , 0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0],
                     [0 , 0 , 0 , 0 , 0 , 0 , 1 , 0 , 0 , 0],
-                    [0, 0, 0, 0, 0, state_vector[0,0], state_vector[0,1], inv_mass_matrix_lin[0,0], inv_mass_matrix_lin[0,1], inv_mass_matrix_lin[0,2]],
-                    [0, 0, 0, 0, 0, state_vector[1,0], state_vector[1,1], inv_mass_matrix_lin[1,0], inv_mass_matrix_lin[1,1], inv_mass_matrix_lin[1,2]],
-                    [0, 0, 0, 0, 0, state_vector[2,0], state_vector[2,1], inv_mass_matrix_lin[2,0], inv_mass_matrix_lin[2,1], inv_mass_matrix_lin[2,2]],
-                    [np.zeros((2,10))],
-                    [0, 0, -4*self.k, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, -4*self.k, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, -4*self.k*self.L**2, 0, 0, 0, 0, 0],])
+                    [0 , 0, 0, 0, 0, state_vector[0,0], state_vector[0,1], inv_mass_matrix_lin[0,0], inv_mass_matrix_lin[0,1], inv_mass_matrix_lin[0,2]],
+                    [0 , 0, 0, 0, 0, state_vector[1,0], state_vector[1,1], inv_mass_matrix_lin[1,0], inv_mass_matrix_lin[1,1], inv_mass_matrix_lin[1,2]],
+                    [0 , 0, 0, 0, 0, state_vector[2,0], state_vector[2,1], inv_mass_matrix_lin[2,0], inv_mass_matrix_lin[2,1], inv_mass_matrix_lin[2,2]],
+                    [0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0],
+                    [0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0],
+                    [0 , 0, -4*self.k, 0, 0, 0, 0, 0, 0, 0],
+                    [0 , 0, 0, -4*self.k, 0, 0, 0, 0, 0, 0],
+                    [0 , 0, 0, 0, -4*self.k*self.L**2, 0, 0, 0, 0, 0],])
        
-        B['accell_axis']=np.array([np.zeros((5,2)),
-                                 [1 , 0],
-                                 [0 , 1],
-                         np.zeros((3,2))])
+        B['accell_axis']=np.array([[0 , 0],[0 , 0],[0 , 0],[0 , 0],[0 , 0],[1 , 0],[0 , 1],[0 , 0],[0 , 0],[0 , 0]])
+
         C['position_total']=np.array([[1, 0, 1, 0, -x2, 0, 0, 0, 0, 0],
                                       [0, 1, 0, 1, -x1, 0, 0, 0, 0, 0]])
-        C['position_axis'] = np.array([[x1],[x2]])
+        C['position_axis'] = np.array([[x1,0, 0, 0, 0, 0, 0, 0, 0, 0],[0, x2, 0, 0, 0, 0, 0, 0, 0, 0,]])
         
-        A=np.zeros((10,10))
-        B['accell_axis']=np.zeros((10,2))
-        C['position_total']=np.zeros((2,10))
-        C['position_axis']=np.zeros((2,10))
+
+       # A=np.zeros((10,10))
+       # B['accell_axis']=np.zeros((10,2))
+       # C['position_total']=np.zeros((2,10))
+       # C['position_axis']=np.zeros((2,10))
         C['gyro_frame']=np.zeros((1,10))
         C['accel_frame']=np.zeros((2,10))
         D['position_total']['accell_axis']=np.zeros((2,2))
