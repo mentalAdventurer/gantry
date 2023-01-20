@@ -4,7 +4,7 @@
 
 - Aufgabe 1
   - [x] a) Vervollständigen
-  - [ ] b) Linearisierung
+  - [x] b) Linearisierung
 - Aufgabe 2 
   - [ ] a)
   - [ ] b) 
