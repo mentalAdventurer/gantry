@@ -73,16 +73,16 @@ class Gantry(DynamicSystem):
         M= np.array([[self.m+self.M, 0, -self.m*x2],
                     [0, self.m+self.M, self.m*x1],
                     [-self.m*x2, self.m*x1, self.J+self.m*(x1**2+x2**2)]])
-        invM = M.inv()
-        x25 = invM*np.array([[self.m, 0],[0, self.m],[-self.m*x2, self.m*x1]])
+        invM = np.linalg.inv(M)
+        x25 = np.dot(invM , np.array([[self.m, 0],[0, self.m],[-self.m*x2, self.m*x1]]))
 
         A=np.array([[0 , 0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0],
                     [0 , 0 , 0 , 0 , 0 , 0 , 1 , 0 , 0 , 0],
-                    [x25],
-                    [np.zeros(2,10)],
+                    [np.dot(np.linalg.inv(M) , np.array([[self.m, 0],[0, self.m],[-self.m*x2, self.m*x1]]))],
+                    [np.zeros((2,10))],
                     [0, 0, -4*self.k, 0, 0, 0, 0, 0, 0, 0],
                     [0, 0, 0, -4*self.k, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, -4*self.k*self.l**2, 0, 0, 0, 0, 0],])
+                    [0, 0, 0, 0, -4*self.k*self.L**2, 0, 0, 0, 0, 0],])
        
         B['accell_axis']=np.array([np.zeros((5,2)),
                                  [1 , 0],
