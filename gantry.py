@@ -74,16 +74,16 @@ class Gantry(DynamicSystem):
                     [0, self.m+self.M, self.m*x1],
                     [-self.m*x2, self.m*x1, self.J+self.m*(x1**2+x2**2)]])
        
-        inv_mass_matrix_lin = np.linalg.inv(mass_matrix_lin)
+        mass_matrix_lin_inv = np.linalg.inv(mass_matrix_lin)
 
-        state_vector = -1*np.dot(inv_mass_matrix_lin, np.array([[self.m, 0],[0, self.m],[-self.m*x2, self.m*x1]]))
+        state_vector = -1*np.dot(mass_matrix_lin_inv, np.array([[self.m, 0],[0, self.m],[-self.m*x2, self.m*x1]]))
         
         #state_vector[i, j,] , auch für p1 etc.
         A=np.array([[0 , 0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0],
                     [0 , 0 , 0 , 0 , 0 , 0 , 1 , 0 , 0 , 0],
-                    [0 , 0, 0, 0, 0, state_vector[0,0], state_vector[0,1], inv_mass_matrix_lin[0,0], inv_mass_matrix_lin[0,1], inv_mass_matrix_lin[0,2]],
-                    [0 , 0, 0, 0, 0, state_vector[1,0], state_vector[1,1], inv_mass_matrix_lin[1,0], inv_mass_matrix_lin[1,1], inv_mass_matrix_lin[1,2]],
-                    [0 , 0, 0, 0, 0, state_vector[2,0], state_vector[2,1], inv_mass_matrix_lin[2,0], inv_mass_matrix_lin[2,1], inv_mass_matrix_lin[2,2]],
+                    [0 , 0, 0, 0, 0, state_vector[0,0], state_vector[0,1], mass_matrix_lin_inv[0,0], mass_matrix_lin_inv[0,1], mass_matrix_lin_inv[0,2]],
+                    [0 , 0, 0, 0, 0, state_vector[1,0], state_vector[1,1], mass_matrix_lin_inv[1,0], mass_matrix_lin_inv[1,1], mass_matrix_lin_inv[1,2]],
+                    [0 , 0, 0, 0, 0, state_vector[2,0], state_vector[2,1], mass_matrix_lin_inv[2,0], mass_matrix_lin_inv[2,1], mass_matrix_lin_inv[2,2]],
                     [0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0],
                     [0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0],
                     [0 , 0, -4*self.k, 0, 0, 0, 0, 0, 0, 0],
@@ -158,16 +158,16 @@ class Gantry(DynamicSystem):
 
         # Lösen des Gleichungssystems mit Hilfe der Massenmatrix
         # Wird für die Zustandsvariablen dx3,dx4,dx5 benötigt
-        masssen_matrix = np.array([[self.m+self.M, 0 ,-self.m*(x1*sphi+x2*cphi)],
+        mass_matrix = np.array([[self.m+self.M, 0 ,-self.m*(x1*sphi+x2*cphi)],
                                    [0, self.m+self.M, self.m*(x1*cphi-x2*sphi)],
                                    [-self.m*(x1*sphi+x2*cphi),self.m*(x1*cphi-x2*sphi),self.J+self.m*(x1**2+x2**2)]])
-        masssen_matrix_inv = np.linalg.inv(masssen_matrix)
+        mass_matrix_inv = np.linalg.inv(mass_matrix)
         impulse_vektor = np.array([[p1],[p2],[pphi]])
-        koordinaten_vektor = np.array([[dx1],[dx2]])
-        koeffizienten_matrix = np.array([[self.m*cphi, -self.m*sphi],
+        state_vector_x5_x6 = np.array([[dx1],[dx2]])
+        coefficients_matrix = np.array([[self.m*cphi, -self.m*sphi],
                                        [self.m*sphi, self.m*cphi],
                                        [-self.m*x2, self.m*x1]])
-        dz1,dz2,dphi = np.dot(masssen_matrix_inv,np.dot(-koeffizienten_matrix,koordinaten_vektor)+impulse_vektor)
+        dz1,dz2,dphi = np.dot(mass_matrix_inv,np.dot(-coefficients_matrix,state_vector_x5_x6)+impulse_vektor)
         
         #Hier sollten die korrekten Ableitungen berechnet und zurückgegebenn werden
         dx1=dx1
