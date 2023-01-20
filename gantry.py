@@ -66,14 +66,37 @@ class Gantry(DynamicSystem):
            'accell_frame':{'accell_axis':np.zeros((2,2))},
            'gyro_frame':{'accell_axis':np.zeros((1,2))},
            'state':{'accell_axis':np.zeros((self.number_of_states(),2))}}
-        B={'accell_axis':np.zeros((self.number_of_states(),2))};
+        B={'accell_axis':np.zeros((self.number_of_states(),2))}
         
         ######-------!!!!!!Aufgabe!!!!!!-------------########
         #Hier die sollten die korrekten Matrizen angegeben werden
-        A=np.zeros((10,10))
-        B['accell_axis']=np.zeros((10,2))
-        C['position_total']=np.zeros((2,10))
-        C['position_axis']=np.zeros((2,10))
+        mass_matrix_lin= np.array([[self.m+self.M, 0, -self.m*x2],
+                    [0, self.m+self.M, self.m*x1],
+                    [-self.m*x2, self.m*x1, self.J+self.m*(x1**2+x2**2)]])
+       
+        mass_matrix_lin_inv = np.linalg.inv(mass_matrix_lin)
+
+        state_vector = -1*np.dot(mass_matrix_lin_inv, np.array([[self.m, 0],[0, self.m],[-self.m*x2, self.m*x1]]))
+        
+        #state_vector[i, j,] , auch für p1 etc.
+        A=np.array([[0 , 0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0],
+                    [0 , 0 , 0 , 0 , 0 , 0 , 1 , 0 , 0 , 0],
+                    [0 , 0, 0, 0, 0, state_vector[0,0], state_vector[0,1], mass_matrix_lin_inv[0,0], mass_matrix_lin_inv[0,1], mass_matrix_lin_inv[0,2]],
+                    [0 , 0, 0, 0, 0, state_vector[1,0], state_vector[1,1], mass_matrix_lin_inv[1,0], mass_matrix_lin_inv[1,1], mass_matrix_lin_inv[1,2]],
+                    [0 , 0, 0, 0, 0, state_vector[2,0], state_vector[2,1], mass_matrix_lin_inv[2,0], mass_matrix_lin_inv[2,1], mass_matrix_lin_inv[2,2]],
+                    [0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0],
+                    [0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0],
+                    [0 , 0, -4*self.k, 0, 0, 0, 0, 0, 0, 0],
+                    [0 , 0, 0, -4*self.k, 0, 0, 0, 0, 0, 0],
+                    [0 , 0, 0, 0, -4*self.k*self.L**2, 0, 0, 0, 0, 0],])
+       
+        B['accell_axis']=np.array([[0 , 0],[0 , 0],[0 , 0],[0 , 0],[0 , 0],[1 , 0],[0 , 1],[0 , 0],[0 , 0],[0 , 0]])
+
+        C['position_total']=np.array([[1, 0, 1, 0, -x2, 0, 0, 0, 0, 0],
+                                      [0, 1, 0, 1, x1, 0, 0, 0, 0, 0]])
+        C['position_axis'] = np.array([[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                                       [0, 1.0, 0, 0, 0, 0, 0, 0, 0, 0]])
+        
         C['gyro_frame']=np.zeros((1,10))
         C['accel_frame']=np.zeros((2,10))
         D['position_total']['accell_axis']=np.zeros((2,2))
@@ -130,16 +153,16 @@ class Gantry(DynamicSystem):
 
         # Lösen des Gleichungssystems mit Hilfe der Massenmatrix
         # Wird für die Zustandsvariablen dx3,dx4,dx5 benötigt
-        masssen_matrix = np.array([[self.m+self.M, 0 ,-self.m*(x1*sphi+x2*cphi)],
+        mass_matrix = np.array([[self.m+self.M, 0 ,-self.m*(x1*sphi+x2*cphi)],
                                    [0, self.m+self.M, self.m*(x1*cphi-x2*sphi)],
                                    [-self.m*(x1*sphi+x2*cphi),self.m*(x1*cphi-x2*sphi),self.J+self.m*(x1**2+x2**2)]])
-        masssen_matrix_inv = np.linalg.inv(masssen_matrix)
+        mass_matrix_inv = np.linalg.inv(mass_matrix)
         impulse_vektor = np.array([[p1],[p2],[pphi]])
-        koordinaten_vektor = np.array([[dx1],[dx2]])
-        koeffizienten_matrix = np.array([[self.m*cphi, -self.m*sphi],
+        state_vector_x5_x6 = np.array([[dx1],[dx2]])
+        coefficients_matrix = np.array([[self.m*cphi, -self.m*sphi],
                                        [self.m*sphi, self.m*cphi],
                                        [-self.m*x2, self.m*x1]])
-        dz1,dz2,dphi = np.dot(masssen_matrix_inv,np.dot(-koeffizienten_matrix,koordinaten_vektor)+impulse_vektor)
+        dz1,dz2,dphi = np.dot(mass_matrix_inv,np.dot(-coefficients_matrix,state_vector_x5_x6)+impulse_vektor)
         
         #Hier sollten die korrekten Ableitungen berechnet und zurückgegebenn werden
         dx1=dx1
