@@ -76,7 +76,7 @@ class Gantry(DynamicSystem):
        
         inv_mass_matrix_lin = np.linalg.inv(mass_matrix_lin)
 
-        state_vector = np.dot(inv_mass_matrix_lin, np.array([[self.m, 0],[0, self.m],[-self.m*x2, self.m*x1]]))
+        state_vector = -1*np.dot(inv_mass_matrix_lin, np.array([[self.m, 0],[0, self.m],[-self.m*x2, self.m*x1]]))
         
         #state_vector[i, j,] , auch für p1 etc.
         A=np.array([[0 , 0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0],
@@ -93,8 +93,9 @@ class Gantry(DynamicSystem):
         B['accell_axis']=np.array([[0 , 0],[0 , 0],[0 , 0],[0 , 0],[0 , 0],[1 , 0],[0 , 1],[0 , 0],[0 , 0],[0 , 0]])
 
         C['position_total']=np.array([[1, 0, 1, 0, -x2, 0, 0, 0, 0, 0],
-                                      [0, 1, 0, 1, -x1, 0, 0, 0, 0, 0]])
-        C['position_axis'] = np.array([[x1,0, 0, 0, 0, 0, 0, 0, 0, 0],[0, x2, 0, 0, 0, 0, 0, 0, 0, 0,]])
+                                      [0, 1, 0, 1, -x1+1.6000000000230046, 0, 0, 0, 0, 0]])
+        C['position_axis'] = np.array([[x1+0.20000000002875562,0, 0, 0, 0, 0, 0, 0, 0, 0],
+                                       [0, x2+0.6999999999732445, 0, 0, 0, 0, 0, 0, 0, 0,]])
         
 
        # A=np.zeros((10,10))
