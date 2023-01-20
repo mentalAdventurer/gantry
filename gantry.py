@@ -93,9 +93,9 @@ class Gantry(DynamicSystem):
         B['accell_axis']=np.array([[0 , 0],[0 , 0],[0 , 0],[0 , 0],[0 , 0],[1 , 0],[0 , 1],[0 , 0],[0 , 0],[0 , 0]])
 
         C['position_total']=np.array([[1, 0, 1, 0, -x2, 0, 0, 0, 0, 0],
-                                      [0, 1, 0, 1, -x1, 0, 0, 0, 0, 0]])
-        C['position_axis'] = np.array([[x1,0, 0, 0, 0, 0, 0, 0, 0, 0],
-                                       [0, x2, 0, 0, 0, 0, 0, 0, 0, 0,]])
+                                      [0, 1, 0, 1, x1, 0, 0, 0, 0, 0]])
+        C['position_axis'] = np.array([[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                                       [0, 1, 0, 0, 0, 0, 0, 0, 0, 0]])
         
         C['gyro_frame']=np.zeros((1,10))
         C['accel_frame']=np.zeros((2,10))
