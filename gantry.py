@@ -199,7 +199,21 @@ class Gantry(DynamicSystem):
 
         ######-------!!!!!!Aufgabe!!!!!!-------------########
         #Hier sollten die korrekte Ausgangsgleichung implementiert werden
-        dphi=np.zeros((1,))
+        cphi=np.cos(phi)
+        sphi=np.sin(phi)
+
+        mass_matrix = np.array([[self.m+self.M, 0 ,-self.m*(x1*sphi+x2*cphi)],
+                                   [0, self.m+self.M, self.m*(x1*cphi-x2*sphi)],
+                                   [-self.m*(x1*sphi+x2*cphi),self.m*(x1*cphi-x2*sphi),self.J+self.m*(x1**2+x2**2)]])
+        mass_matrix_inv = np.linalg.inv(mass_matrix)
+        impulse_vektor = np.array([[p1],[p2],[pphi]])
+        state_vector_x5_x6 = np.array([[dx1],[dx2]])
+        coefficients_matrix = np.array([[self.m*cphi, -self.m*sphi],
+                                       [self.m*sphi, self.m*cphi],
+                                       [-self.m*x2, self.m*x1]])
+        dz1,dz2,dphi = np.dot(mass_matrix_inv,np.dot(-coefficients_matrix,state_vector_x5_x6)+impulse_vektor)
+
+        dphi=dphi
         ######-------!!!!!!Aufgabe Ende!!!!!!-------########
         return dphi
 
