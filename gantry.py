@@ -267,7 +267,7 @@ class Gantry(DynamicSystem):
             return y
         else:
             y = np.zeros((2,_x.shape[1]))
-            for ii in range(x.shape[1]):
+            for ii in range(_x.shape[1]):
                 y[0,ii] = _x[2,ii]+np.cos(_x[4,ii])*_x[0,ii]-np.sin(_x[4,ii])*_x[1,ii]
                 y[1,ii] = _x[3,ii]+np.sin(_x[4,ii])*_x[0,ii]+np.cos(_x[4,ii])*_x[1,ii]
             return y 
@@ -284,7 +284,7 @@ class Gantry(DynamicSystem):
             return y  
         else:
             y = np.zeros((2,_x.shape[1]))
-            for ii in range(x.shape[1]):
+            for ii in range(_x.shape[1]):
                 y[0,ii] = _x[0,ii] 
                 y[1,ii] = _x[1,ii]
             return y
