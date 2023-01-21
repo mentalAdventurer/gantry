@@ -167,9 +167,9 @@ class Gantry(DynamicSystem):
         #Hier sollten die korrekten Ableitungen berechnet und zurückgegebenn werden
         dx1=dx1
         dx2=dx2
-        dz1=dz1
-        dz2=dz2
-        dphi=dphi
+        dz1=dz1[0]
+        dz2=dz2[0]
+        dphi=dphi[0]
         dp1=-4*self.k*z1
         dp2=-4*self.k*z2
         dpphi=(-4*self.k*self.L**2*sphi + 
