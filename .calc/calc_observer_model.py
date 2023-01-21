@@ -9,8 +9,8 @@ J=M/12*(L1**2+L2**2)
 m=0.8
 k=100.0
 
-x1=0
-x2=0
+x1=5        # -> Rang der Beobachtbarkeitsmatrix bleibt bei versch. 
+x2=10.33    # Ruhelagen gleich.
 
 mass_matrix_lin= np.array([[m+M, 0, -m*x2],
             [0, m+M, m*x1],
@@ -35,3 +35,11 @@ B=np.array([[0 , 0],[0 , 0],[0 , 0],[0 , 0],[0 , 0],[1 , 0],[0 , 1],[0 , 0],[0 ,
 
 C=np.array([[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 1.0, 0, 0, 0, 0, 0, 0, 0, 0]])
+
+O = ctrl.obsv(A, C)
+
+print(O)
+print(O.shape)
+print(np.linalg.matrix_rank(O)) # -> Rang der Beobachtbarkeitsmatrix ist kleiner als die Zahl der Zustände n -> System ist nicht vollständig Rekonstruierbar
+
+print(A)
