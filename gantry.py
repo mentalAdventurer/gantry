@@ -174,7 +174,7 @@ class Gantry(DynamicSystem):
         dp2=-4*self.k*z2
         dpphi=(-4*self.k*self.L**2*sphi + 
                self.m*(-dphi*dz1*x1-dphi*dz2*x2-dz1*dx2+dx1*dz2)*cphi +
-               self.m*(dphi*dz1*x2-dphi*dz2*x1-dz1*dx1+dz2*dx1)*sphi)
+               self.m*(dphi*dz1*x2-dphi*dz2*x1-dz1*dx1-dz2*dx2)*sphi)
 
         dx=np.array([dx1,dx2,dz1,dz2,dphi,ddx1,ddx2,dp1,dp2,dpphi])
 
