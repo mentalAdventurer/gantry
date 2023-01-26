@@ -232,13 +232,49 @@ class Gantry(DynamicSystem):
         p2=_x[8]
         pphi=_x[9]
 
+        # DGL auspacken 
+        dx = self.model(t,x)
+        dx1=dx[0]
+        dx2=dx[1]
+        dz1=dx[2]
+        dz2=dx[3]
+        dphi=dx[4]
+        ddx1=dx[5]
+        ddx2=dx[6]
+        dp1=dx[7]
+        dp2=dx[8]
+        dpphi=dx[9]
+
         #Winkelfunktionen vorausberechnen
         cphi=np.cos(phi)
         sphi=np.sin(phi)
 
+        # Definition der Matrizen
+        mass_matrix = np.array([[self.m+self.M, 0 ,-self.m*(x1*sphi+x2*cphi)],
+                                   [0, self.m+self.M, self.m*(x1*cphi-x2*sphi)],
+                                   [-self.m*(x1*sphi+x2*cphi),self.m*(x1*cphi-x2*sphi),self.J+self.m*(x1**2+x2**2)]])
+        mass_matrix_inv = np.linalg.inv(mass_matrix)
+
+        dmass_matrix = np.array([[0, 0 ,-self.m*(dx1*sphi+x1*cphi*dphi+dx2*cphi-x2*sphi*dphi)],
+                                [0, 0, self.m*(dx1*cphi-x1*sphi*dphi-dx2*sphi-x2*cphi*dphi)],
+                                [-self.m*(dx1*sphi+x1*cphi*dphi+dx2*cphi-x2*sphi*dphi),
+                                 self.m*(dx1*cphi-x1*sphi*dphi-dx2*sphi-x2*cphi*dphi),
+                                 self.m*(2*dx1*x1+2*dx2*x2)]])
+        coefficients_matrix = self.m*np.array([[cphi, -sphi],
+                                               [sphi, cphi],
+                                               [-x2, x1]])
+        dcoefficients_matrix = self.m*np.array([[-sphi*dphi, -cphi*dphi],
+                                               [cphi*dphi, -sphi*dphi],
+                                               [-dx2, dx1]])
+        dz_vector=np.array([[dz1],[dz2],[dphi]])
+        dp_vector=np.array([[dp1],[dp2],[dphi]])
+        dq=np.array([[dx1],[dx2]])
+        ddq=np.array([[ddx1],[ddx2]])
+        
         ######-------!!!!!!Aufgabe!!!!!!-------------########
         #Hier sollten die korrekte Ausgangsgleichung implementiert werden
-        ddz=np.zeros((2,))
+        ddz = mass_matrix_inv @ (dp_vector - dmass_matrix@dz_vector - dcoefficients_matrix@dq - coefficients_matrix@ddq)
+        ddz = ddz[0,:2] 
         ######-------!!!!!!Aufgabe Ende!!!!!!-------########
        
         return ddz
