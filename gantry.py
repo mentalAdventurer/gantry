@@ -274,7 +274,7 @@ class Gantry(DynamicSystem):
         ######-------!!!!!!Aufgabe!!!!!!-------------########
         #Hier sollten die korrekte Ausgangsgleichung implementiert werden
         ddz = mass_matrix_inv @ (dp_vector - dmass_matrix@dz_vector - dcoefficients_matrix@dq - coefficients_matrix@ddq)
-        ddz = ddz[0,:2] 
+        ddz = ddz[:2,0] 
         ######-------!!!!!!Aufgabe Ende!!!!!!-------########
        
         return ddz
