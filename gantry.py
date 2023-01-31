@@ -199,7 +199,21 @@ class Gantry(DynamicSystem):
 
         ######-------!!!!!!Aufgabe!!!!!!-------------########
         #Hier sollten die korrekte Ausgangsgleichung implementiert werden
-        dphi=np.zeros((1,))
+        cphi=np.cos(phi)
+        sphi=np.sin(phi)
+
+        mass_matrix = np.array([[self.m+self.M, 0 ,-self.m*(x1*sphi+x2*cphi)],
+                                   [0, self.m+self.M, self.m*(x1*cphi-x2*sphi)],
+                                   [-self.m*(x1*sphi+x2*cphi),self.m*(x1*cphi-x2*sphi),self.J+self.m*(x1**2+x2**2)]])
+        mass_matrix_inv = np.linalg.inv(mass_matrix)
+        impulse_vektor = np.array([[p1],[p2],[pphi]])
+        state_vector_x5_x6 = np.array([[dx1],[dx2]])
+        coefficients_matrix = np.array([[self.m*cphi, -self.m*sphi],
+                                       [self.m*sphi, self.m*cphi],
+                                       [-self.m*x2, self.m*x1]])
+        dz1,dz2,dphi = np.dot(mass_matrix_inv,np.dot(-coefficients_matrix,state_vector_x5_x6)+impulse_vektor)
+
+        dphi=dphi
         ######-------!!!!!!Aufgabe Ende!!!!!!-------########
         return dphi
 
@@ -218,13 +232,49 @@ class Gantry(DynamicSystem):
         p2=_x[8]
         pphi=_x[9]
 
+        # DGL auspacken 
+        dx = self.model(t,x)
+        dx1=dx[0]
+        dx2=dx[1]
+        dz1=dx[2]
+        dz2=dx[3]
+        dphi=dx[4]
+        ddx1=dx[5]
+        ddx2=dx[6]
+        dp1=dx[7]
+        dp2=dx[8]
+        dpphi=dx[9]
+
         #Winkelfunktionen vorausberechnen
         cphi=np.cos(phi)
         sphi=np.sin(phi)
 
+        # Definition der Matrizen
+        mass_matrix = np.array([[self.m+self.M, 0 ,-self.m*(x1*sphi+x2*cphi)],
+                                   [0, self.m+self.M, self.m*(x1*cphi-x2*sphi)],
+                                   [-self.m*(x1*sphi+x2*cphi),self.m*(x1*cphi-x2*sphi),self.J+self.m*(x1**2+x2**2)]])
+        mass_matrix_inv = np.linalg.inv(mass_matrix)
+
+        dmass_matrix = np.array([[0, 0 ,-self.m*(dx1*sphi+x1*cphi*dphi+dx2*cphi-x2*sphi*dphi)],
+                                [0, 0, self.m*(dx1*cphi-x1*sphi*dphi-dx2*sphi-x2*cphi*dphi)],
+                                [-self.m*(dx1*sphi+x1*cphi*dphi+dx2*cphi-x2*sphi*dphi),
+                                 self.m*(dx1*cphi-x1*sphi*dphi-dx2*sphi-x2*cphi*dphi),
+                                 self.m*(2*dx1*x1+2*dx2*x2)]])
+        coefficients_matrix = self.m*np.array([[cphi, -sphi],
+                                               [sphi, cphi],
+                                               [-x2, x1]])
+        dcoefficients_matrix = self.m*np.array([[-sphi*dphi, -cphi*dphi],
+                                               [cphi*dphi, -sphi*dphi],
+                                               [-dx2, dx1]])
+        dz_vector=np.array([[dz1],[dz2],[dphi]])
+        dp_vector=np.array([[dp1],[dp2],[dpphi]])
+        dq=np.array([[dx1],[dx2]])
+        ddq=np.array([[ddx1],[ddx2]])
+        
         ######-------!!!!!!Aufgabe!!!!!!-------------########
         #Hier sollten die korrekte Ausgangsgleichung implementiert werden
-        ddz=np.zeros((2,))
+        ddz = mass_matrix_inv @ (dp_vector - dmass_matrix@dz_vector - dcoefficients_matrix@dq - coefficients_matrix@ddq)
+        ddz = ddz[:2,0] 
         ######-------!!!!!!Aufgabe Ende!!!!!!-------########
        
         return ddz
@@ -314,15 +364,21 @@ class Gantry(DynamicSystem):
             for output_name,output_function in self._outputs.items():
                 y[output_name][:,ii]=output_function(None,x[:,ii])
         self._inputs["accell_axis"].input_function= tmp
-        error_dx_abs_max=np.max(np.linalg.norm(dx-dx_load,2,axis=0))
-        error_dx_rel_max=np.max(np.linalg.norm(dx-dx_load,2,axis=0)/np.linalg.norm(dx_load,2,axis=0))
-        print("Maximaler absoluter Fehler in Modellgleichung (euklidische Norm):",error_dx_abs_max)
-        print("Maximaler relativer Fehler in Modellgleichung (euklidische Norm):",error_dx_rel_max)
+        error_dx_abs_max_norm=np.max(np.linalg.norm(dx-dx_load,2,axis=0))
+        error_dx_rel_max_norm=np.max(np.linalg.norm(dx-dx_load,2,axis=0)/np.linalg.norm(dx_load,2,axis=0))
+        error_dx_abs_max=np.max(np.abs(dx-dx_load),axis=1)
+        print("Maximaler absolutier Fehler in Modellgleichungen (euklidische Norm):",error_dx_abs_max_norm)
+        print("Maximaler relativer Fehler in Modellgleichung (euklidische Norm):",error_dx_rel_max_norm)
+        print("Maximaler absolutier Fehler in Modellgleichungen (komponentenweise):")
+        display(np.array([error_dx_abs_max]).transpose())
         for output_name,_y in y.items():
-            error_y_abs_max=np.max(np.linalg.norm(_y-y_load[output_name],2,axis=0))
-            error_y_rel_max=np.max(np.linalg.norm(_y-y_load[output_name],2,axis=0)/np.linalg.norm(y_load[output_name],2,axis=0))
-            print("Maximaler absoluter Fehler in Ausgang " + output_name + " (euklidische Norm):",error_y_abs_max)
-            print("Maximaler relativer Fehler in Ausgang " + output_name + " (euklidische Norm):",error_y_rel_max)
+            error_y_abs_max_norm=np.max(np.linalg.norm(_y-y_load[output_name],2,axis=0))
+            error_y_rel_max_norm=np.max(np.linalg.norm(_y-y_load[output_name],2,axis=0)/np.linalg.norm(y_load[output_name],2,axis=0))
+            error_y_abs_max=np.max(np.abs(_y-y_load[output_name]),axis=1)
+            print("Maximaler absoluter Fehler in Ausgang " + output_name + " (euklidische Norm):",error_y_abs_max_norm)
+            print("Maximaler relativer Fehler in Ausgang " + output_name + " (euklidische Norm):",error_y_rel_max_norm)
+            print("Maximaler absoluter Fehler in Ausgang " + output_name + " (komponententweise):")
+            print(np.array([error_y_abs_max]).transpose())
         dx_load_max=np.max(np.linalg.norm(dx_load,2,axis=0))
         y_load_max=np.max(np.linalg.norm(y_load[output_name],2,axis=0))
         
