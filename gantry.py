@@ -267,7 +267,7 @@ class Gantry(DynamicSystem):
                                                [cphi*dphi, -sphi*dphi],
                                                [-dx2, dx1]])
         dz_vector=np.array([[dz1],[dz2],[dphi]])
-        dp_vector=np.array([[dp1],[dp2],[dphi]])
+        dp_vector=np.array([[dp1],[dp2],[dpphi]])
         dq=np.array([[dx1],[dx2]])
         ddq=np.array([[ddx1],[ddx2]])
         
