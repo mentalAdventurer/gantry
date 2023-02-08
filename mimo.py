@@ -6,7 +6,7 @@ from itertools import permutations
 
 
 # Berechnung aller Kronecker-Indizes zu einem Paar (A,B)
-def kronecker(A,B):
+def kronecker(A,B,debug=False):
     S=controllability_matrix(A,B)
     num_inputs=np.shape(B)[1]
     num_states=np.shape(A)[0]
@@ -26,9 +26,14 @@ def kronecker(A,B):
             column_indzes=np.append(column_indzes,column_index_new)
             selected_S = S[:,column_indzes]
             rank=np.linalg.matrix_rank(selected_S)
+            if debug==True:
+                print("Rang: ",rank)
+                print("column_indzes",column_indzes)
 
             if rank == selected_S.shape[1] and sum(max_col_indep)<num_states:
                 max_col_indep[pow_AB]+=1
+                if debug==True:
+                    print("M",pow_AB,":",max_col_indep[pow_AB])
             else:
                 break
     # Kronecker-Index n ist die Anzahl der Werte von m_1 bis m_end, die größer gleich n sind.
