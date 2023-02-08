@@ -11,8 +11,30 @@ def kronecker(A,B):
     num_inputs=np.shape(B)[1]
     num_states=np.shape(A)[0]
     ######-------!!!!!!Aufgabe!!!!!!-------------########
-    #Bitte anpassen
-    kroneckers=np.zeros((num_inputs))
+    # Berechnung der maximal linear unabhängigen Spalten m_n für AB^n
+    # Dabei ist m_n = max_col_indep[n]
+    max_col_indep=np.zeros(num_states,dtype=np.int32)
+    max_col_indep[0]=int(num_inputs)
+    for pow_AB in range(1,num_states-1):
+        for column_index_iter in range(0,num_inputs):
+            column_indzes=np.array([],dtype=np.int32)
+            for k in range(0,pow_AB):
+                column_index_prev = np.arange(num_inputs*k,num_inputs*k+max_col_indep[k])
+                column_indzes=np.concatenate((column_indzes,column_index_prev))
+
+            column_index_new = pow_AB*num_inputs+column_index_iter
+            column_indzes=np.append(column_indzes,column_index_new)
+            selected_S = S[:,column_indzes]
+            rank=np.linalg.matrix_rank(selected_S)
+
+            if rank == selected_S.shape[1] and sum(max_col_indep)<num_states:
+                max_col_indep[pow_AB]+=1
+            else:
+                break
+    # Kronecker-Index n ist die Anzahl der Werte von m_1 bis m_end, die größer gleich n sind.
+    kroneckers=np.zeros((num_inputs),dtype=np.int32)
+    for n in range(0,num_inputs):
+        kroneckers[n] = np.count_nonzero(max_col_indep>n)
     ######-------!!!!!!Aufgabe!!!!!!-------------########
     return kroneckers
         
