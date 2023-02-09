@@ -408,13 +408,10 @@ class ContinuousFlatnessBasedTrajectory(DynamicSystem):
         #Matrizen der Regelungsnormalform holen
         ######-------!!!!!!Aufgabe!!!!!!-------------########
         #Hier bitte benötigte Zeilen wieder "dekommentieren" und Rest löschen
-        #self.A_rnf, Brnf, Crnf, self.M, self.Q, S = mimo.rnf(linearized_system.A(),
-        #                                                    linearized_system.B(input_name),
-        #                                                     linearized_system.C(output_name),
-        #                                                     kronecker)
-        self.A_rnf=np.zeros((10,10))
-        self.M=np.eye(2)
-        self.Q=np.eye(10)
+        self.A_rnf, Brnf, Crnf, self.M, self.Q, S = mimo.rnf(linearized_system.A(),
+                                                            linearized_system.B(input_name),
+                                                             linearized_system.C(output_name),
+                                                             kronecker)
         ######-------!!!!!!Aufgabe Ende!!!!!!-------########
 
         self._outputs["u_ref"]=lambda t,x:self.input(t)
