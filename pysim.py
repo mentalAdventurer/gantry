@@ -428,8 +428,8 @@ class ContinuousFlatnessBasedTrajectory(DynamicSystem):
         # Crnf ... Ausgangsmatrix in Regelungsnormalform zum vorgegebnen Ausgang
         
 
-        self.eta_start=np.zeros_like(y_start_rel)
-        self.eta_final=np.zeros_like(y_final_rel)
+        self.eta_start=y_start_rel/Crnf[:,0]
+        self.eta_final=y_start_rel/Crnf[:,0]
 
         ######-------!!!!!!Aufgabe Ende!!!!!!-------########
 
