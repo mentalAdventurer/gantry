@@ -427,9 +427,11 @@ class ContinuousFlatnessBasedTrajectory(DynamicSystem):
         # y_final_rel Endwerte des vorgegebenen Ausgangs
         # Crnf ... Ausgangsmatrix in Regelungsnormalform zum vorgegebnen Ausgang
         
+        Crnf_equi = Crnf[:,(0,kronecker[0])]
+        Crnf_equi_inv = np.linalg.inv(Crnf_equi)
 
-        self.eta_start=y_start_rel/Crnf[:,0]
-        self.eta_final=y_final_rel/Crnf[:,0]
+        self.eta_start=Crnf_equi_inv@y_start_rel
+        self.eta_final=Crnf_equi_inv@y_final_rel
 
         ######-------!!!!!!Aufgabe Ende!!!!!!-------########
 
