@@ -6,11 +6,11 @@
   - [x] a) Vervollständigen
   - [x] b) Linearisierung
 - Aufgabe 2 
-  - [ ] a)
-  - [ ] b) 
-  - [ ] c)
-  - [ ] d)
-  - [ ] e)
+  - [x] a) Kronecker-Indizes Algorithmus
+  - [ ] b) Konstruktor und `state` Methode in `ContinuousFlatnessBasedTrajectory` vervollständigen
+  - [ ] c) Trajektorienplanung
+  - [ ] d) Reglerverstärkung
+  - [ ] e) (optional)
 - Aufgabe 3
   - [ ] a)
   - [ ] b)
