@@ -7,7 +7,7 @@
   - [x] b) Linearisierung
 - Aufgabe 2 
   - [x] a) Kronecker-Indizes Algorithmus
-  - [ ] b) Konstruktor und `state` Methode in `ContinuousFlatnessBasedTrajectory` vervollständigen
+  - [x] b) Konstruktor und `state` Methode in `ContinuousFlatnessBasedTrajectory` vervollständigen
   - [ ] c) Trajektorienplanung
   - [ ] d) Reglerverstärkung
   - [ ] e) (optional)
