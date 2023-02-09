@@ -429,7 +429,7 @@ class ContinuousFlatnessBasedTrajectory(DynamicSystem):
         
 
         self.eta_start=y_start_rel/Crnf[:,0]
-        self.eta_final=y_start_rel/Crnf[:,0]
+        self.eta_final=y_final_rel/Crnf[:,0]
 
         ######-------!!!!!!Aufgabe Ende!!!!!!-------########
 
