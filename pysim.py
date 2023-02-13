@@ -408,13 +408,10 @@ class ContinuousFlatnessBasedTrajectory(DynamicSystem):
         #Matrizen der Regelungsnormalform holen
         ######-------!!!!!!Aufgabe!!!!!!-------------########
         #Hier bitte benötigte Zeilen wieder "dekommentieren" und Rest löschen
-        #self.A_rnf, Brnf, Crnf, self.M, self.Q, S = mimo.rnf(linearized_system.A(),
-        #                                                    linearized_system.B(input_name),
-        #                                                     linearized_system.C(output_name),
-        #                                                     kronecker)
-        self.A_rnf=np.zeros((10,10))
-        self.M=np.eye(2)
-        self.Q=np.eye(10)
+        self.A_rnf, Brnf, Crnf, self.M, self.Q, S = mimo.rnf(linearized_system.A(),
+                                                            linearized_system.B(input_name),
+                                                             linearized_system.C(output_name),
+                                                             kronecker)
         ######-------!!!!!!Aufgabe Ende!!!!!!-------########
 
         self._outputs["u_ref"]=lambda t,x:self.input(t)
@@ -430,9 +427,11 @@ class ContinuousFlatnessBasedTrajectory(DynamicSystem):
         # y_final_rel Endwerte des vorgegebenen Ausgangs
         # Crnf ... Ausgangsmatrix in Regelungsnormalform zum vorgegebnen Ausgang
         
+        Crnf_equi = Crnf[:,(0,kronecker[0])]
+        Crnf_equi_inv = np.linalg.inv(Crnf_equi)
 
-        self.eta_start=np.zeros_like(y_start_rel)
-        self.eta_final=np.zeros_like(y_final_rel)
+        self.eta_start=Crnf_equi_inv@y_start_rel
+        self.eta_final=Crnf_equi_inv@y_final_rel
 
         ######-------!!!!!!Aufgabe Ende!!!!!!-------########
 
