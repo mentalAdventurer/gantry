@@ -550,20 +550,49 @@ class GantryObserverModel(DynamicSystem):
         sphi=np.sin(phi)
 
         ######-------!!!!!!Aufgabe!!!!!!-------------########
+        # Zustandsraummodell so aufstellen, dass die gesuchten Größen später in einem Vektor sind
+        # Definition der Matrizen
+        mass_matrix = self.m*np.array([[cphi, -sphi,-(x1*sphi+x2*cphi)],
+                                       [sphi, cphi, (x1*cphi-x2*sphi)],
+                                       [-x2, x1,self.J/self.m+(x1**2+x2**2)]])
+        mass_matrix_inv = np.linalg.inv(mass_matrix)
+
+        dmass_matrix = self.m*np.array([[-sphi*dphi, -cphi*dphi,-(dx1*sphi+x1*cphi*dphi+dx2*cphi-x2*sphi*dphi)],
+                                        [cphi*dphi, -sphi*dphi, (dx1*cphi-x1*sphi*dphi-dx2*sphi-x2*cphi*dphi)],
+                                        [-dx2, dx1,(2*dx1*x1+2*dx2*x2)]])
+        coefficients_matrix = np.array([[self.m+self.M, 0],
+                                        [0, self.m+self.M],
+                                        [-self.m*(x1*sphi+x2*cphi),self.m*(x1*cphi-x2*sphi)]])
+        dcoefficients_matrix = np.array([[0, 0],
+                                        [0, 0],
+                                        [-self.m*(dx1*sphi+x1*cphi*dphi+dx2*cphi-x2*sphi*dphi),
+                                         self.m*(dx1*cphi-x1*sphi*dphi-dx2*sphi-x2*cphi*dphi)]])
+        # Definition der Vektoren
+        dz = np.array([dz1,dz2])
+        ddz = u
+        dx_vector=np.array([dx1,dx2,dphi])
+        dp1=-4*self.k*z1
+        dp2=-4*self.k*z2
+        dpphi=(-4*self.k*self.L**2*sphi + 
+               self.m*(-dphi*dz1*x1-dphi*dz2*x2-dz1*dx2+dx1*dz2)*cphi +
+               self.m*(dphi*dz1*x2-dphi*dz2*x1-dz1*dx1-dz2*dx2)*sphi)
+        dp=np.array([dp1,dp2,dpphi])
+
+        # Berechnung der gesuchten Variablen
+        ddx_vector = mass_matrix_inv@(dp-dmass_matrix@dx_vector-dcoefficients_matrix@dz-coefficients_matrix@ddz)
+        
         #Hier sollten die korrekten Ableitungen berechnet und zurückgegebenn werden
-        dx1=0
-        dx2=0
-        dz1=0
-        dz2=0
-        dphi=0
-        ddx1=0
-        ddx2=0
-        ddz1=0
-        ddz2=0
-        ddphi=0
-
-        dx=np.array([dx1,dx2,dz1,dz2,dphi,ddx1,ddx2,ddx1,ddx2,ddphi])
-
+        dx1=dx1
+        dx2=dx2
+        dz1=dz1
+        dz2=dz2
+        dphi=dphi
+        ddx1=ddx_vector[0]
+        ddx2=ddx_vector[1]
+        ddz1=ddz[0]
+        ddz2=ddz[1]
+        ddphi=ddx_vector[2]
+        
         ######-------!!!!!!Aufgabe Ende!!!!!!-------########
         dx=np.array([dx1,dx2,dz1,dz2,dphi,ddx1,ddx2,ddz1,ddz2,ddphi])
         return dx 
