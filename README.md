@@ -8,14 +8,14 @@
 - Aufgabe 2 
   - [x] a) Kronecker-Indizes Algorithmus
   - [x] b) Konstruktor und `state` Methode in `ContinuousFlatnessBasedTrajectory` vervollständigen
-  - [ ] c) Trajektorienplanung
+  - [x] c) Trajektorienplanung
   - [ ] d) Reglerverstärkung
   - [ ] e) (optional)
 - Aufgabe 3
-  - [ ] a)
-  - [ ] b)
-  - [ ] c)
-  - [ ] d)
+  - [x] a) Beobachtbarkeit
+  - [x] b) `_gyro_frame_scalar`and `accell_frame_scalar`vervollständigen
+  - [x] c) `observermodell`einfügen
+  - [x] d) `lineares observermodell`einfügen
   - [ ] e)
   - [ ] f)
   - [ ] g)
