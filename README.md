@@ -16,8 +16,8 @@
   - [x] b) `_gyro_frame_scalar`and `accell_frame_scalar`vervollständigen
   - [x] c) `observermodell`einfügen
   - [x] d) `lineares observermodell`einfügen
-  - [ ] e)
-  - [ ] f)
-  - [ ] g)
-  - [ ] h)
+  - [ ] e) Beobachtbarkeit für verschiedene Ruhelagen
+  - [ ] f) Kroneckerindize für verschiedene Ruhelagen
+  - [ ] g) `GantryObserve` vervollständigen
+  - [ ] h) Beobachter im Regelkreis testen
 
