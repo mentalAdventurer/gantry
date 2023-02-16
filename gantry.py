@@ -629,11 +629,48 @@ class GantryObserverModel(DynamicSystem):
 
         ######-------!!!!!!Aufgabe!!!!!!-------------########
         #Hier die sollten die korrekten Matrizen angegeben werden
-        A=np.zeros((10,10))
-        B['accell_frame']=np.zeros((10,2))
-        C['position_total']=np.zeros((2,10))
+
+        # Massenmatrix
+        mass_matrix_lin=self.m*np.array([[1,0,-x2],
+                                       [0,1,x1],
+                                       [-x2,x1,self.J/self.m + (x1**2 + x2**2)]])
+        mass_matrix_lin_inv = np.linalg.inv(mass_matrix_lin)
+
+        # Koeffizienten Matrix
+        coefficients_matrix_ddz = -1*np.array([self.m + self.M, 0],
+                                         [0, self.m + self.M],
+                                         [-self.m*x2, self.m*x1])
+        coefficients_matrix_z = -1*np.array([[4*self.k,0,0],
+                                          [0,4*self.k,0],
+                                          [0,0,k*self.L**2]])
+
+        # Definition der System Matrix
+        A_partial = mass_matrix_lin_inv@coefficients_matrix_z
+        A=np.zeros((self.number_of_states(),self.number_of_states()))
+        A[0:5,5:]=np.eye(5)
+        A[5:7,2:5]=A_partial[0:2,:]
+        A[9,2:5]=A_partial[2,:]
+
+        # Definition der Eingangsmatrix
+        B_partial = mass_matrix_lin_inv@coefficients_matrix_ddz
+        B = np.zeros((10,2))
+        B[5:7,:]=B_partial[0:2,:]
+        B[9,:]=B_partial[2,:]
+        B[7:9,:]=np.eye(2)
+        B['accell_frame']=B
+
+        # Definition der Ausgangsmatrix
+        C['position_axis'] = np.array([
+            [1,0,1,0,-x2,0,0,0,0,0],
+            [0,1,0,1,x1,0,0,0,0,0]])
+        
         C['position_axis']=np.zeros((2,10))
+        C['position_axis'][0,0]=1.0
+        C['position_axis'][1,1]=1.0
+
         C['gyro_frame']=np.zeros((1,10))
+        C['gyro_frame'][0,9]=1.0
+
         ######-------!!!!!!Aufgabe Ende!!!!!!-------########
 
         D['position_total']['accell_axis']=np.zeros((2,2))
