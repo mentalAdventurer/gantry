@@ -6,45 +6,26 @@ from itertools import permutations
 
 
 # Berechnung aller Kronecker-Indizes zu einem Paar (A,B)
-def kronecker(A,B,debug=False):
+def kronecker(A,B):
     S=controllability_matrix(A,B)
     num_inputs=np.shape(B)[1]
     num_states=np.shape(A)[0]
     ######-------!!!!!!Aufgabe!!!!!!-------------########
-    # Berechnung der maximal linear unabhängigen Spalten m_n für AB^n
-    # Dabei ist m_n = max_col_indep[n]
-    max_col_indep=np.zeros(num_states,dtype=np.int32)
-    max_col_indep[0]=int(num_inputs)
-    for pow_AB in range(1,num_states-1):
-        for column_index_iter in range(0,num_inputs):
-            column_indzes=np.array([],dtype=np.int32)
-            for k in range(0,pow_AB):
-                column_index_prev = np.arange(num_inputs*k,num_inputs*k+max_col_indep[k])
-                column_indzes=np.concatenate((column_indzes,column_index_prev))
+    kroneckers=np.ones((num_inputs),dtype=np.int32)
+    valid_columns = np.arange(0,num_inputs) 
 
-            column_index_new = pow_AB*num_inputs+column_index_iter
-            column_indzes=np.append(column_indzes,column_index_new)
-            selected_S = S[:,column_indzes]
-            rank=np.linalg.matrix_rank(selected_S)
-            if debug==True:
-                print("Rang: ",rank)
-                print("column_indzes",column_indzes)
+    i = 1
+    while(len(valid_columns) < num_states and i < S.shape[1]):
+        columns = np.append(valid_columns,i)
+        rank = np.linalg.matrix_rank(S[:,columns])
+        if rank == S[:,columns].shape[1]:
+            valid_columns = columns
+            kroneckers[i%num_inputs]+=1
+        i+=1
 
-            if rank == selected_S.shape[1] and sum(max_col_indep)<num_states:
-                max_col_indep[pow_AB]+=1
-                if debug==True:
-                    print("M",pow_AB,":",max_col_indep[pow_AB])
-            else:
-                break
-    # Kronecker-Index n ist die Anzahl der Werte von m_1 bis m_end, die größer gleich n sind.
-    kroneckers=np.zeros((num_inputs),dtype=np.int32)
-    for n in range(0,num_inputs):
-        kroneckers[n] = np.count_nonzero(max_col_indep>n)
     ######-------!!!!!!Aufgabe!!!!!!-------------########
     return kroneckers
-        
-           
-           
+
                       
 # Prototyp-Funktion für 5-fach (stückweise)-differenzierbaren  
 # Übergang von 0 nach 1 auf dem Intervall [0,1]
