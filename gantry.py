@@ -642,7 +642,7 @@ class GantryObserverModel(DynamicSystem):
                                          [-self.m*x2, self.m*x1]])
         coefficients_matrix_z = -1*np.array([[4*self.k,0,0],
                                           [0,4*self.k,0],
-                                          [0,0,self.k*self.L**2]])
+                                          [0,0,4*self.k*self.L**2]])
 
         # Definition der System Matrix
         A_partial = mass_matrix_lin_inv@coefficients_matrix_z
@@ -659,7 +659,7 @@ class GantryObserverModel(DynamicSystem):
         B['accell_frame'][7:9,:]=np.eye(2)
 
         # Definition der Ausgangsmatrix
-        C['position_axis'] = np.array([
+        C['position_total'] = np.array([
             [1,0,1,0,-x2,0,0,0,0,0],
             [0,1,0,1,x1,0,0,0,0,0]])
         
