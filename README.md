@@ -9,7 +9,7 @@
   - [x] a) Kronecker-Indizes Algorithmus
   - [x] b) Konstruktor und `state` Methode in `ContinuousFlatnessBasedTrajectory` vervollständigen
   - [x] c) Trajektorienplanung
-  - [ ] d) Reglerverstärkung
+  - [x] d) Reglerverstärkung
   - [ ] e) (optional)
 - Aufgabe 3
   - [x] a) Beobachtbarkeit
