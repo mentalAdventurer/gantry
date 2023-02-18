@@ -705,7 +705,7 @@ class GantryObserver(GantryObserverModel):
 
         ######-------!!!!!!Aufgabe!!!!!!-------------########
         #Bitte anpassen
-        dx = super().model(t,x)
+        dx = super().model(t,x)-self.gain@(y-y_sys)
         ######-------!!!!!!Aufgabe!!!!!!-------------########
         return dx
         
