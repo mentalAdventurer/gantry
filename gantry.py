@@ -75,8 +75,8 @@ class Gantry(DynamicSystem):
                     [-self.m*x2, self.m*x1, self.J+self.m*(x1**2+x2**2)]])
        
         mass_matrix_lin_inv = np.linalg.inv(mass_matrix_lin)
-
-        state_vector = -1*np.dot(mass_matrix_lin_inv, np.array([[self.m, 0],[0, self.m],[-self.m*x2, self.m*x1]]))
+        coefficients_matrix = np.array([[self.m, 0],[0, self.m],[-self.m*x2, self.m*x1]])
+        state_vector = -1*mass_matrix_lin_inv@coefficients_matrix 
         
         #state_vector[i, j,] , auch für p1 etc.
         A=np.array([[0 , 0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0],
@@ -98,11 +98,16 @@ class Gantry(DynamicSystem):
                                        [0, 1.0, 0, 0, 0, 0, 0, 0, 0, 0]])
         
         C['gyro_frame']=np.zeros((1,10))
+        C['gyro_frame'][0,:]=A[4,:]
+
         C['accell_frame']=np.zeros((2,10))
+        C['accell_frame'][:,:]=mass_matrix_lin_inv[0:2,:]@A[7:,:]
+        D['accell_frame']['accell_axis']=np.zeros((2,2))
+        D['accell_frame']['accell_axis']=-mass_matrix_lin_inv[0:2,:]@coefficients_matrix
+
         D['position_total']['accell_axis']=np.zeros((2,2))
         D['position_axis']['accell_axis']=np.zeros((2,2))
         D['gyro_frame']['accell_axis']=np.zeros((1,2))
-        D['accell_frame']['accell_axis']=np.zeros((2,2))
         ######-------!!!!!!Aufgabe Ende!!!!!!-------########
         return ContinuousLinearizedSystem(A,B,C,D,x_equi,u_equi,y_equi)
     
