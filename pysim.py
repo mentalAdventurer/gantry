@@ -521,9 +521,7 @@ class LinearStateFeedback(DynamicSystem):
         #Hier sollt das korrekte Regelgesetz angeben implementiert werden
         #Reglerverstärkung ist self._gain
 
-        x_tilde = x - x_ref
-        u_tilde = -self._gain@x_tilde
-        u = u_ref + u_tilde
+        u=np.zeros_like(u_ref)
 
         ######-------!!!!!!Aufgabe Ende!!!!!!-------########
         
