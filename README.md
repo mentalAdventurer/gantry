@@ -19,5 +19,5 @@
   - [x] e) Beobachtbarkeit für verschiedene Ruhelagen
   - [x] f) Kroneckerindize für verschiedene Ruhelagen
   - [x] g) `GantryObserve` vervollständigen
-  - [ ] h) Beobachter im Regelkreis testen
+  - [x] h) Beobachter im Regelkreis testen
 
